@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="project-list">
+    <view class="project-item" wx:for="{{projects}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+      <image class="project-image" src="{{item.image}}" mode="aspectFill"></image>
+      <view class="project-info">
+        <view class="project-title">{{item.title}}</view>
+        <view class="trees-info">
+          <view class="join-time">捐赠时间：{{item.joinDate}}</view>
+          <view class="trees-section-title">我种下的</view>
+          <view class="trees-status-list">
+            <block wx:if="{{item.growingTrees > 0}}">
+              <view class="trees-status">
+                <image class="tree-icon" src="/images/mini.png" mode="aspectFit"></image>
+                <text class="tree-count">{{item.growingTrees}}颗树苗成长中</text>
+              </view>
+            </block>
+            <block wx:if="{{item.grownTrees > 0}}">
+              <view class="trees-status">
+                <image class="tree-icon" src="/images/tree.png" mode="aspectFit"></image>
+                <text class="tree-count">{{item.grownTrees}}颗树木已成年</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

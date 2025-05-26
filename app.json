@@ -1,0 +1,29 @@
+{
+  "pages": [
+    "pages/treeMap/treeMap",
+    "pages/myTrees/myTrees",
+    "pages/projectDetail/projectDetail"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "种一棵树",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#4CAF50",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/treeMap/treeMap",
+        "text": "种树地图"
+      },
+      {
+        "pagePath": "pages/myTrees/myTrees",
+        "text": "我的种树"
+      }
+    ]
+  },
+  "style": "v2"
+}

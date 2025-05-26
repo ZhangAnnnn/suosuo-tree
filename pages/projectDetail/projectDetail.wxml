@@ -1,0 +1,185 @@
+<view class="container">
+  <swiper class="project-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{500}}">
+    <swiper-item wx:for="{{projectImages}}" wx:key="index">
+      <image src="{{item}}" mode="aspectFill" class="swiper-image"></image>
+    </swiper-item>
+  </swiper>
+  
+  <view class="project-content">
+    <view class="project-title">{{projectInfo.title}}</view>
+    
+    <view class="project-progress">
+      <view class="progress-info">
+        <text class="progress-target">计划种植{{projectInfo.targetTrees}}颗梭梭树</text>
+      </view>
+      <view class="progress-bar-wrapper">
+        <view class="progress-bar">
+          <view class="progress-inner" style="width: {{projectInfo.progress}}%"></view>
+        </view>
+        <view class="progress-percent" style="left: {{projectInfo.progress}}%">
+          <text>已完成 {{projectInfo.progress}}%</text>
+        </view>
+        <image class="progress-tree-icon" src="/images/tree.png" style="left: {{projectInfo.progress}}%"></image>
+      </view>
+    </view>
+
+    <view class="project-description">{{projectInfo.description}}</view>
+
+    <view class="my-trees-section">
+      <view class="section-header">
+        <view class="section-title">我种下的</view>
+        <view class="share-button" bindtap="showShareModal">
+          <image class="share-icon" src="/images/fenxiang.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      
+      <!-- 种植记录时间轴 -->
+      <view class="timeline">
+        <block wx:for="{{projectInfo.myTrees}}" wx:key="id">
+          <view class="timeline-item">
+            <view class="timeline-icon">
+              <image class="tree-icon" src="{{item.isGrown ? '/images/tree.png' : '/images/mini.png'}}" mode="aspectFit"></image>
+            </view>
+            <view class="timeline-content">
+              <view class="tree-status">
+                <text class="tree-count">{{item.count}}颗{{item.isGrown ? '树木已成年' : '树苗成长中'}}</text>
+              </view>
+              <view class="tree-details">
+                <view class="plant-date">捐赠时间：{{item.plantDate}}</view>
+                <view class="days-passed">已种下 {{item.daysPassed}} 天</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <!-- 种树效果展示 -->
+      <view class="tree-effects">
+        <view class="effect-summary" bindtap="toggleDustStormDetails">
+          <text>已阻挡了 {{projectInfo.dustStormCount}} 次沙尘暴</text>
+          <view class="arrow-icon {{showDustStormDetails ? 'arrow-up' : ''}}"></view>
+        </view>
+      </view>
+
+      <!-- 沙尘暴详情弹窗 -->
+      <view class="dust-storm-modal {{showDustStormDetails ? 'show' : ''}}" bindtap="toggleDustStormDetails">
+        <view class="dust-storm-content" catchtap="preventClose">
+          <view class="dust-storm-header">
+            <text class="dust-storm-title">沙尘暴防护记录</text>
+            <text class="close-btn" bindtap="toggleDustStormDetails">×</text>
+          </view>
+          <view class="dust-storm-list">
+            <block wx:for="{{projectInfo.dustStormRecords}}" wx:key="id">
+              <view class="dust-storm-item">
+                <view class="dust-storm-date">{{item.date}}</view>
+                <view class="dust-storm-info">{{item.location}}的{{item.level}}级沙尘暴</view>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 项目公示模块 -->
+    <view class="project-disclosure-section">
+      <view class="section-title">项目公示</view>
+      <view class="disclosure-content">
+        <view class="disclosure-summary">
+          <image class="verify-icon" src="/images/renzheng.png" mode="aspectFit"></image>
+          <text class="summary-text">资金使用透明公开，每一笔捐款都用于实际种植</text>
+        </view>
+        <view class="disclosure-list">
+          <block wx:for="{{projectInfo.disclosureRecords}}" wx:key="id">
+            <view class="disclosure-item">
+              <view class="disclosure-header">
+                <view class="disclosure-date">{{item.date}}</view>
+                <view class="disclosure-amount">使用 ¥{{item.amount}}</view>
+              </view>
+              <view class="disclosure-detail">
+                <text>完成 {{item.area}}m² 的梭梭树植树</text>
+              </view>
+              <view class="disclosure-location" wx:if="{{item.location}}">
+                <text>种植地点：{{item.location}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 添加底部间距，避免按钮遮挡内容 -->
+    <view class="bottom-space"></view>
+  </view>
+
+  <!-- 固定在底部的参与种树按钮 -->
+  <view class="join-button-container">
+    <button class="join-button" bindtap="joinPlanting">参与种树</button>
+  </view>
+
+  <!-- 分享弹窗 -->
+  <view class="share-modal" wx:if="{{showShareModal}}" bindtap="hideShareModal">
+    <view class="share-content" catchtap="preventClose">
+      <view class="share-header">
+        <text class="share-title">分享我的种树成果</text>
+        <text class="close-btn" bindtap="hideShareModal">×</text>
+      </view>
+      <view class="share-image-container">
+        <image class="share-image" src="{{shareImageUrl}}" mode="aspectFit" wx:if="{{shareImageUrl}}"></image>
+        <view class="loading-text" wx:else>正在生成分享图...</view>
+      </view>
+      <button class="save-image-btn" bindtap="saveShareImage" wx:if="{{shareImageUrl}}">保存到相册</button>
+    </view>
+  </view>
+
+  <!-- 参与种树半屏弹窗 -->
+  <view class="donation-modal" wx:if="{{showDonationModal}}" bindtap="hideDonationModal">
+    <view class="donation-content" catchtap="preventClose">
+      <view class="donation-header">
+        <view class="donation-title">参与种树</view>
+        <text class="close-btn" bindtap="hideDonationModal">×</text>
+      </view>
+      
+      <view class="donation-body">
+        <view class="donation-description">
+          <text>选择您的捐赠档位，每一份爱心都将化作绿色希望</text>
+        </view>
+        
+        <!-- 预设档位 -->
+        <view class="donation-options">
+          <block wx:for="{{donationOptions}}" wx:key="id">
+            <view class="donation-option {{selectedOption === item.id ? 'selected' : ''}}" 
+                  bindtap="selectDonationOption" data-id="{{item.id}}">
+              <view class="option-amount">¥{{item.amount}}</view>
+              <view class="option-trees">相当于{{item.trees}}颗梭梭树</view>
+            </view>
+          </block>
+        </view>
+        
+        <!-- 自定义金额 -->
+        <view class="custom-donation">
+          <view class="custom-title">自定义金额</view>
+          <view class="custom-input-wrapper">
+            <text class="currency-symbol">¥</text>
+            <input class="custom-input" 
+                   type="digit" 
+                   placeholder="请输入金额" 
+                   value="{{customAmount}}"
+                   bindinput="onCustomAmountInput"
+                   bindtap="selectCustomOption"/>
+            <view class="custom-trees" wx:if="{{customAmount && customAmount > 0}}">
+              相当于{{customTrees}}颗梭梭树
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="donation-footer">
+        <button class="confirm-donation-btn" 
+                bindtap="confirmDonation"
+                disabled="{{!selectedOption && (!customAmount || customAmount <= 0)}}">
+          确认捐赠
+        </button>
+      </view>
+    </view>
+  </view>
+</view> 

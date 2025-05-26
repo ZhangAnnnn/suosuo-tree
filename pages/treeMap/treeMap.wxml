@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="map-container">
+    <map
+      class="map"
+      longitude="116.397390"
+      latitude="39.908860"
+      scale="14"
+    />
+  </view>
+</view>
